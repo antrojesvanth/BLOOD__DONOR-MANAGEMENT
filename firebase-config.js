@@ -1,17 +1,10 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth }       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore }  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-// 🔴 REPLACE THESE WITH YOUR FIREBASE CONFIG
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey:            "YOUR_API_KEY",
-  authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-  storageBucket:     "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId:             "YOUR_APP_ID"
+  apiKey: "AIzaSyD9DjzvAxR_ST_4liqaLM-zngkI1K9AYwk",
+  authDomain: "bloodlink-781c4.firebaseapp.com",
+  projectId: "bloodlink-781c4",
+  storageBucket: "bloodlink-781c4.firebasestorage.app",
+  messagingSenderId: "565462585503",
+  appId: "1:565462585503:web:1d1877ee58066d50ad92aa",
+  measurementId: "G-BSDD3GBZB8"
 };
-
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db   = getFirestore(app);
