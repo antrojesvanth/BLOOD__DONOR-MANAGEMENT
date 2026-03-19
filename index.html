@@ -9,17 +9,16 @@
 :root{--bg:#0a0608;--surface:#110a0c;--card:#1a0d10;--card2:#1f1015;--border:#2d1419;--red:#e53935;--red2:#ff5252;--green:#00e676;--gold:#ffd600;--text:#f5e6e8;--muted:#8a6068;--white:#ffffff;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
-.bg-glow{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 20% 50%,rgba(229,57,53,.07) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 80% 30%,rgba(255,82,82,.04) 0%,transparent 60%);}
-.grid-lines{position:fixed;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(255,255,255,.01) 60px,rgba(255,255,255,.01) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,.01) 60px,rgba(255,255,255,.01) 61px);}
+.bg-glow{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 20% 50%,rgba(229,57,53,.07) 0%,transparent 70%);}
 .container{display:flex;width:100%;max-width:980px;min-height:620px;border-radius:24px;overflow:hidden;border:1px solid var(--border);box-shadow:0 40px 120px rgba(0,0,0,.7);position:relative;z-index:1;animation:slideUp .5s ease;}
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
 .left-panel{flex:1;background:linear-gradient(150deg,#1a0508 0%,#0d0205 100%);padding:3rem;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--border);position:relative;overflow:hidden;}
 .left-panel::before{content:'';position:absolute;top:-80px;left:-80px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(229,57,53,.1),transparent 70%);pointer-events:none;}
+.drop-icon{font-size:4rem;margin-bottom:1rem;animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 .brand h1{font-family:'Rajdhani',sans-serif;font-size:2.4rem;font-weight:700;color:var(--white);letter-spacing:.06em;}
 .brand h1 span{color:var(--red2);}
 .brand p{font-size:.8rem;color:var(--muted);margin-top:.3rem;letter-spacing:.1em;text-transform:uppercase;}
-.drop-icon{font-size:4rem;margin-bottom:1rem;animation:pulse 2s ease infinite;}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 .features{margin-top:1.5rem;display:flex;flex-direction:column;gap:.9rem;}
 .feature{display:flex;align-items:center;gap:1rem;}
 .feat-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:1rem;flex-shrink:0;}
@@ -32,34 +31,34 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-he
 .rc-admin{border-color:rgba(229,57,53,.4);color:var(--red2);background:rgba(229,57,53,.1);}
 .rc-donor{border-color:rgba(0,230,118,.4);color:var(--green);background:rgba(0,230,118,.08);}
 .rc-hospital{border-color:rgba(41,121,255,.4);color:#82aaff;background:rgba(41,121,255,.1);}
-.right-panel{width:420px;background:var(--surface);padding:2.5rem;display:flex;flex-direction:column;justify-content:center;}
-.panel-tabs{display:flex;gap:.5rem;margin-bottom:1.8rem;background:var(--card);border-radius:10px;padding:.3rem;}
+.right-panel{width:420px;background:var(--surface);padding:2.5rem;display:flex;flex-direction:column;justify-content:center;overflow-y:auto;}
+.panel-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;background:var(--card);border-radius:10px;padding:.3rem;}
 .ptab{flex:1;padding:.55rem;border-radius:7px;border:none;background:none;font-family:'Sora',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;}
 .ptab.active{background:var(--red);color:#fff;}
 .form-section{animation:fadeIn .25s ease;}
 .form-section.hidden{display:none;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-h2.form-title{font-family:'Rajdhani',sans-serif;font-size:1.6rem;font-weight:700;color:var(--white);margin-bottom:.3rem;letter-spacing:.04em;}
-p.form-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.3rem;}
-.form-group{margin-bottom:.9rem;}
-.form-group label{display:block;font-size:.75rem;color:#c49aa0;margin-bottom:.35rem;font-weight:500;letter-spacing:.04em;}
-.form-group input,.form-group select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.68rem 1rem;color:var(--text);font-size:.88rem;font-family:'Sora',sans-serif;outline:none;transition:border-color .2s;}
+h2.form-title{font-family:'Rajdhani',sans-serif;font-size:1.6rem;font-weight:700;color:var(--white);margin-bottom:.3rem;}
+p.form-sub{font-size:.8rem;color:var(--muted);margin-bottom:1rem;}
+.form-group{margin-bottom:.85rem;}
+.form-group label{display:block;font-size:.75rem;color:#c49aa0;margin-bottom:.35rem;font-weight:500;}
+.form-group input,.form-group select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.65rem 1rem;color:var(--text);font-size:.88rem;font-family:'Sora',sans-serif;outline:none;transition:border-color .2s;}
 .form-group input:focus,.form-group select:focus{border-color:var(--red);}
 .form-group select option{background:var(--card2);}
 .two-inputs{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
-.btn-submit{width:100%;padding:.82rem;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;margin-top:.4rem;transition:all .2s;}
-.btn-submit:hover{background:#c62828;transform:translateY(-1px);}
-.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-submit{width:100%;padding:.82rem;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;margin-top:.5rem;transition:all .2s;}
+.btn-submit:hover{background:#c62828;}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;}
 .alert{padding:.8rem 1rem;border-radius:9px;font-size:.82rem;margin-bottom:.8rem;display:none;}
 .alert.show{display:block;}
 .alert-error{background:rgba(255,82,82,.1);border:1px solid rgba(255,82,82,.3);color:var(--red2);}
 .alert-success{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);color:var(--green);}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:.4rem;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:.4rem;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .divider-or{display:flex;align-items:center;gap:.8rem;margin:.7rem 0;color:var(--muted);font-size:.78rem;}
 .divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--border);}
-.btn-google{width:100%;padding:.75rem;border-radius:10px;font-size:.88rem;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;background:#fff;color:#3c4043;border:1.5px solid #dadce0;display:flex;align-items:center;justify-content:center;gap:.7rem;transition:all .2s;}
-.btn-google:hover{background:#f8f9fa;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.btn-google{width:100%;padding:.72rem;border-radius:10px;font-size:.88rem;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;background:#fff;color:#3c4043;border:1.5px solid #dadce0;display:flex;align-items:center;justify-content:center;gap:.7rem;transition:all .2s;}
+.btn-google:hover{background:#f8f9fa;}
 .btn-google:disabled{opacity:.6;cursor:not-allowed;}
 .google-icon{width:18px;height:18px;flex-shrink:0;}
 @media(max-width:750px){.left-panel{display:none;}.right-panel{width:100%;}.container{border-radius:0;min-height:100vh;}}
@@ -67,9 +66,9 @@ p.form-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.3rem;}
 </head>
 <body>
 <div class="bg-glow"></div>
-<div class="grid-lines"></div>
 <div class="container">
-  <!-- LEFT -->
+
+  <!-- LEFT PANEL -->
   <div class="left-panel">
     <div>
       <div class="drop-icon">🩸</div>
@@ -94,11 +93,11 @@ p.form-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.3rem;}
     </div>
   </div>
 
-  <!-- RIGHT -->
+  <!-- RIGHT PANEL -->
   <div class="right-panel">
     <div class="panel-tabs">
-      <button class="ptab active" onclick="switchTab('login')">Login</button>
-      <button class="ptab" onclick="switchTab('register')">Register</button>
+      <button class="ptab active" id="tab-login" onclick="switchTab('login')">Login</button>
+      <button class="ptab" id="tab-register" onclick="switchTab('register')">Register</button>
     </div>
 
     <!-- LOGIN -->
@@ -106,9 +105,15 @@ p.form-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.3rem;}
       <h2 class="form-title">Welcome back 🩸</h2>
       <p class="form-sub">Sign in to BloodLink</p>
       <div class="alert alert-error" id="login-error"></div>
-      <div class="form-group"><label>Email Address</label><input type="email" id="login-email" placeholder="admin@bloodlink.com"/></div>
-      <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••"/></div>
-      <button class="btn-submit" id="login-btn" data-label="Sign In" onclick="handleLogin()">Sign In</button>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="login-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')handleLogin()"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()"/>
+      </div>
+      <button class="btn-submit" id="login-btn" onclick="handleLogin()">Sign In</button>
       <div class="divider-or">or</div>
       <button class="btn-google" id="google-btn" onclick="handleGoogleLogin()">
         <svg class="google-icon" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -139,8 +144,10 @@ p.form-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.3rem;}
           <div class="form-group"><label>Blood Group</label>
             <select id="reg-blood">
               <option value="">Select</option>
-              <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
-              <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+              <option value="A+">A+</option><option value="A-">A-</option>
+              <option value="B+">B+</option><option value="B-">B-</option>
+              <option value="AB+">AB+</option><option value="AB-">AB-</option>
+              <option value="O+">O+</option><option value="O-">O-</option>
             </select>
           </div>
           <div class="form-group"><label>Phone</label><input type="tel" id="reg-phone" placeholder="9876543210"/></div>
@@ -154,29 +161,44 @@ p.form-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.3rem;}
         <div class="form-group"><label>Password</label><input type="password" id="reg-pass" placeholder="Min 6 chars"/></div>
         <div class="form-group"><label>Confirm</label><input type="password" id="reg-pass2" placeholder="Repeat"/></div>
       </div>
-      <button class="btn-submit" id="reg-btn" data-label="Create Account" onclick="handleRegister()">Create Account</button>
+      <button class="btn-submit" id="reg-btn" onclick="handleRegister()">Create Account</button>
     </div>
   </div>
 </div>
 
 <script type="module">
-import { loginUser, registerUser, loginWithGoogle, redirectToDashboard } from './auth.js';
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { auth } from './firebase-config.js';
+import { auth, db } from './firebase-config.js';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-onAuthStateChanged(auth, (user) => {
-  if (user) { const role=sessionStorage.getItem('bl_role'); if(role) redirectToDashboard(role); }
+const dashMap = { admin:'dashboard-admin.html', donor:'dashboard-donor.html', hospital:'dashboard-hospital.html' };
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+  try {
+    const snap = await getDoc(doc(db,'users',user.uid));
+    if (snap.exists()) {
+      const d = snap.data();
+      sessionStorage.setItem('bl_uid',d.uid);
+      sessionStorage.setItem('bl_role',d.role);
+      sessionStorage.setItem('bl_name',d.name);
+      window.location.href = dashMap[d.role]||'index.html';
+    }
+  } catch(e){}
 });
 
-function showError(id,msg){const el=document.getElementById(id);el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),5000);}
-function showSuccess(id,msg){const el=document.getElementById(id);el.textContent=msg;el.classList.add('show');}
-function setLoading(id,loading,label){const btn=document.getElementById(id);btn.disabled=loading;btn.innerHTML=loading?'<span class="spinner"></span>Please wait...':label;}
+function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),6000);}
+function showOk(id,msg){const el=document.getElementById(id);el.textContent=msg;el.classList.add('show');}
+function setBusy(id,yes){
+  const b=document.getElementById(id);b.disabled=yes;
+  b.innerHTML=yes?'<span class="spinner"></span>Please wait...':({'login-btn':'Sign In','reg-btn':'Create Account'}[id]||'Submit');
+}
 
 window.switchTab=(tab)=>{
-  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.form-section').forEach(s=>s.classList.add('hidden'));
-  event.target.classList.add('active');
-  document.getElementById(tab+'-section').classList.remove('hidden');
+  document.getElementById('login-section').classList.toggle('hidden',tab!=='login');
+  document.getElementById('register-section').classList.toggle('hidden',tab!=='register');
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-register').classList.toggle('active',tab==='register');
 };
 
 window.toggleFields=()=>{
@@ -188,20 +210,50 @@ window.toggleFields=()=>{
 window.handleLogin=async()=>{
   const email=document.getElementById('login-email').value.trim();
   const pass=document.getElementById('login-pass').value;
-  if(!email||!pass)return showError('login-error','Please fill in all fields.');
-  setLoading('login-btn',true,'Sign In');
-  try{const user=await loginUser(email,pass);redirectToDashboard(user.role);}
-  catch(e){setLoading('login-btn',false,'Sign In');showError('login-error',e.code==='auth/invalid-credential'?'Invalid email or password.':e.message);}
+  if(!email||!pass)return showErr('login-error','⚠ Please fill in email and password.');
+  setBusy('login-btn',true);
+  try{
+    const cred=await signInWithEmailAndPassword(auth,email,pass);
+    const snap=await getDoc(doc(db,'users',cred.user.uid));
+    if(!snap.exists())throw new Error('Profile not found. Please register first.');
+    const d=snap.data();
+    sessionStorage.setItem('bl_uid',cred.user.uid);
+    sessionStorage.setItem('bl_role',d.role);
+    sessionStorage.setItem('bl_name',d.name);
+    window.location.href=dashMap[d.role]||'index.html';
+  }catch(e){
+    setBusy('login-btn',false);
+    showErr('login-error',
+      e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'?'❌ Wrong email or password.':
+      e.code==='auth/user-not-found'?'❌ No account found. Please register.':
+      e.code==='auth/too-many-requests'?'⚠ Too many attempts. Try later.':
+      '❌ '+e.message);
+  }
 };
 
 window.handleGoogleLogin=async()=>{
   const btn=document.getElementById('google-btn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner" style="border-top-color:#4285F4"></span> Signing in...';
-  try{const user=await loginWithGoogle();redirectToDashboard(user.role);}
-  catch(e){
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner" style="border-top-color:#4285F4"></span> Signing in...';
+  try{
+    const result=await signInWithPopup(auth,new GoogleAuthProvider());
+    const uid=result.user.uid;
+    const snap=await getDoc(doc(db,'users',uid));
+    let role='donor';
+    if(snap.exists()){
+      const d=snap.data();role=d.role;
+      sessionStorage.setItem('bl_uid',uid);sessionStorage.setItem('bl_role',role);sessionStorage.setItem('bl_name',d.name);
+    }else{
+      const name=result.user.displayName||'User',email=result.user.email;
+      const pd={uid,name,email,role:'donor',bloodGroup:'',phone:'',totalDonations:0,lastDonation:null,status:'Active',createdAt:serverTimestamp()};
+      await setDoc(doc(db,'users',uid),pd);await setDoc(doc(db,'donors',uid),pd);
+      sessionStorage.setItem('bl_uid',uid);sessionStorage.setItem('bl_role','donor');sessionStorage.setItem('bl_name',name);
+    }
+    window.location.href=dashMap[role]||'index.html';
+  }catch(e){
     btn.disabled=false;
     btn.innerHTML=`<svg class="google-icon" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continue with Google`;
-    if(e.code!=='auth/popup-closed-by-user')showError('login-error','Google sign-in failed.');
+    if(e.code!=='auth/popup-closed-by-user')showErr('login-error','❌ Google sign-in failed: '+e.message);
   }
 };
 
@@ -211,20 +263,36 @@ window.handleRegister=async()=>{
   const email=document.getElementById('reg-email').value.trim();
   const pass=document.getElementById('reg-pass').value;
   const pass2=document.getElementById('reg-pass2').value;
+  if(!name)return showErr('reg-error','⚠ Enter your name.');
+  if(!role)return showErr('reg-error','⚠ Select a role.');
+  if(!email)return showErr('reg-error','⚠ Enter your email.');
+  if(!pass)return showErr('reg-error','⚠ Enter a password.');
+  if(pass.length<6)return showErr('reg-error','⚠ Password must be at least 6 characters.');
+  if(pass!==pass2)return showErr('reg-error','⚠ Passwords do not match.');
   const bloodGroup=document.getElementById('reg-blood')?.value||'';
-  const phone=document.getElementById('reg-phone')?.value||document.getElementById('reg-hphone')?.value||'';
+  const phone=role==='donor'?(document.getElementById('reg-phone')?.value||''):(document.getElementById('reg-hphone')?.value||'');
   const hospital=document.getElementById('reg-hospital')?.value||'';
-  if(!name||!role||!email||!pass||!pass2)return showError('reg-error','Please fill in all fields.');
-  if(pass!==pass2)return showError('reg-error','Passwords do not match.');
-  if(pass.length<6)return showError('reg-error','Password must be at least 6 characters.');
-  setLoading('reg-btn',true,'Create Account');
+  setBusy('reg-btn',true);
   try{
-    await registerUser({name,email,password:pass,role,bloodGroup,phone,hospital});
-    showSuccess('reg-success','✅ Account created! Redirecting...');
-    setTimeout(()=>redirectToDashboard(role),1500);
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    const uid=cred.user.uid;
+    const pd={uid,name,email,role,createdAt:serverTimestamp(),
+      ...(role==='donor'?{bloodGroup,phone,totalDonations:0,lastDonation:null,status:'Active'}:{}),
+      ...(role==='hospital'?{hospitalName:hospital||name,phone}:{})
+    };
+    await setDoc(doc(db,'users',uid),pd);
+    await setDoc(doc(db,role+'s',uid),pd);
+    sessionStorage.setItem('bl_uid',uid);
+    sessionStorage.setItem('bl_role',role);
+    sessionStorage.setItem('bl_name',name);
+    showOk('reg-success','✅ Account created! Redirecting...');
+    setTimeout(()=>window.location.href=dashMap[role]||'index.html',1500);
   }catch(e){
-    setLoading('reg-btn',false,'Create Account');
-    showError('reg-error',e.code==='auth/email-already-in-use'?'Email already registered.':e.message);
+    setBusy('reg-btn',false);
+    showErr('reg-error',
+      e.code==='auth/email-already-in-use'?'❌ Email already registered. Please login.':
+      e.code==='auth/invalid-email'?'❌ Invalid email address.':
+      '❌ '+e.message);
   }
 };
 </script>
