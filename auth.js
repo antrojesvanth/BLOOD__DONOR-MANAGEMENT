@@ -103,3 +103,10 @@ export function redirectToDashboard(role) {
   const map = { admin: 'dashboard-admin.html', donor: 'dashboard-donor.html', hospital: 'dashboard-hospital.html' };
   window.location.href = map[role] || 'index.html';
 }
+// In your JS file (works for both regular scripts and modules)
+const loginBtn = document.querySelector('#login-button'); // Ensure your button has this ID
+if (loginBtn) {
+  loginBtn.addEventListener('click', () => {
+    console.log('Login logic here');
+  });
+}
