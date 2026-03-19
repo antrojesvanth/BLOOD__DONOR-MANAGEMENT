@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BloodLink — Donor Dashboard</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body style="display:flex">
+<aside class="sidebar">
+  <div class="sidebar-logo"><h1>Blood<span>Link</span></h1><p>Donor Portal</p></div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">🏠</span>Dashboard</button>
+    <button class="nav-item" onclick="showPage('history',this)"><span class="icon">📋</span>My Donations</button>
+    <button class="nav-item" onclick="showPage('stock',this)"><span class="icon">🩸</span>Blood Availability</button>
+    <button class="nav-item" onclick="showPage('profile',this)"><span class="icon">👤</span>My Profile</button>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-badge">
+      <div class="user-avatar" id="donor-avatar" style="background:linear-gradient(135deg,var(--green),#00796b)">D</div>
+      <div class="user-info"><p id="donor-name">Donor</p><span class="role-badge role-donor">Donor</span></div>
+    </div>
+    <button class="logout-btn" onclick="handleLogout()">⬅ Logout</button>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <h2 id="page-title">My Dashboard</h2>
+    <div class="topbar-right">
+      <div class="date-badge" id="today-date"></div>
+      <span class="role-badge role-donor">Donor</span>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="stat-row">
+      <div class="stat-card sc-red"><div class="stat-icon">🩸</div><div class="stat-val" id="s-total">—</div><div class="stat-label">Total Donations</div></div>
+      <div class="stat-card sc-green"><div class="stat-icon">🫀</div><div class="stat-val" id="s-blood">—</div><div class="stat-label">Blood Group</div></div>
+      <div class="stat-card sc-gold"><div class="stat-icon">📅</div><div class="stat-val" id="s-last" style="font-size:1.2rem">—</div><div class="stat-label">Last Donation</div></div>
+      <div class="stat-card sc-blue"><div class="stat-icon">✅</div><div class="stat-val" id="s-status">—</div><div class="stat-label">Status</div></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="sec-header"><div class="sec-title">My Donor Info</div></div>
+        <div class="card-box">
+          <table style="width:100%">
+            <tr><td style="color:var(--muted);font-size:.82rem;padding:.5rem 0">Name</td><td id="info-name" style="font-size:.9rem;font-weight:600">—</td></tr>
+            <tr><td style="color:var(--muted);font-size:.82rem;padding:.5rem 0">Blood Group</td><td id="info-blood">—</td></tr>
+            <tr><td style="color:var(--muted);font-size:.82rem;padding:.5rem 0">Phone</td><td id="info-phone">—</td></tr>
+            <tr><td style="color:var(--muted);font-size:.82rem;padding:.5rem 0">Total Donations</td><td id="info-don">—</td></tr>
+            <tr><td style="color:var(--muted);font-size:.82rem;padding:.5rem 0">Last Donation</td><td id="info-last">—</td></tr>
+            <tr><td style="color:var(--muted);font-size:.82rem;padding:.5rem 0">Status</td><td id="info-status">—</td></tr>
+          </table>
+        </div>
+        <div class="sec-header" style="margin-top:1.5rem"><div class="sec-title">Why Donate?</div></div>
+        <div class="card-box">
+          <div style="display:flex;flex-direction:column;gap:.8rem">
+            <div style="display:flex;gap:.8rem;align-items:flex-start"><span style="font-size:1.2rem">❤️</span><div><strong style="color:var(--white);font-size:.9rem">Save up to 3 lives</strong><p style="font-size:.8rem;color:var(--muted);margin-top:.2rem">One donation can help 3 different patients</p></div></div>
+            <div style="display:flex;gap:.8rem;align-items:flex-start"><span style="font-size:1.2rem">🔄</span><div><strong style="color:var(--white);font-size:.9rem">Replenishes in 56 days</strong><p style="font-size:.8rem;color:var(--muted);margin-top:.2rem">Your body fully replaces donated blood</p></div></div>
+            <div style="display:flex;gap:.8rem;align-items:flex-start"><span style="font-size:1.2rem">🏥</span><div><strong style="color:var(--white);font-size:.9rem">Always needed</strong><p style="font-size:.8rem;color:var(--muted);margin-top:.2rem">Blood cannot be manufactured — only donated</p></div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sec-header"><div class="sec-title">Recent Donation History</div><button class="sec-action" onclick="showPage('history',null)">View All</button></div>
+        <div id="recent-history"><p class="text-muted">Loading...</p></div>
+        <div class="sec-header" style="margin-top:1.5rem"><div class="sec-title">Current Blood Availability</div></div>
+        <div class="stock-grid" id="dash-stock" style="grid-template-columns:repeat(4,1fr)"><p class="text-muted">Loading...</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONATION HISTORY -->
+  <div class="page" id="page-history">
+    <div class="sec-header"><div class="sec-title">My Donation History</div></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Date</th><th>Blood Group</th><th>Units</th><th>Notes</th></tr></thead>
+      <tbody id="history-tbody"><tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem">No donations recorded yet</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- BLOOD AVAILABILITY -->
+  <div class="page" id="page-stock">
+    <div class="sec-header"><div class="sec-title">Current Blood Availability</div></div>
+    <div class="stock-grid" id="stock-grid"><p class="text-muted">Loading...</p></div>
+    <div class="card-box" style="margin-top:1rem;background:rgba(229,57,53,.05);border-color:rgba(229,57,53,.2)">
+      <p style="color:var(--lighter);font-size:.88rem;line-height:1.7">
+        🩸 <strong style="color:var(--white)">Want to donate?</strong> Contact your nearest blood bank or hospital.
+        Update your profile with your blood group so we can match you with urgent needs.
+      </p>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="page-profile">
+    <div class="sec-header"><div class="sec-title">My Profile</div></div>
+    <div style="max-width:480px">
+      <div class="card-box">
+        <div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.5rem">
+          <div class="user-avatar" style="width:64px;height:64px;font-size:1.6rem;background:linear-gradient(135deg,var(--green),#00796b)" id="p-avatar">D</div>
+          <div><h3 id="p-name-disp" style="font-size:1.2rem;color:var(--white)">—</h3><span class="role-badge role-donor">Donor</span></div>
+        </div>
+        <div class="form-group"><label>Full Name</label><input type="text" id="p-name"/></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="p-phone" placeholder="9876543210"/></div>
+        <div class="form-group"><label>Blood Group</label>
+          <select id="p-blood">
+            <option value="">Select</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Age</label><input type="number" id="p-age" placeholder="25"/></div>
+        <div class="form-group"><label>Address</label><input type="text" id="p-address" placeholder="City, State"/></div>
+        <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+        <div class="alert alert-success" id="p-success" style="margin-top:1rem"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { requireAuth, logoutUser } from './auth.js';
+import { getUser, updateUser, getDonationsByDonor, getBloodStock, fmtDate } from './db.js';
+
+let me=null, myDonations=[], stock=[];
+const bgClass=(g)=>({'A+':'bg-Ap','A-':'bg-Am','B+':'bg-Bp','B-':'bg-Bm','AB+':'bg-ABp','AB-':'bg-ABm','O+':'bg-Op','O-':'bg-Om'}[g]||'');
+
+requireAuth(['donor']).then(async user=>{
+  me=user;
+  document.getElementById('donor-name').textContent=user.name;
+  document.getElementById('donor-avatar').textContent=user.name[0].toUpperCase();
+  document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  const fresh=await getUser(me.uid); me={...me,...fresh};
+  myDonations=await getDonationsByDonor(me.uid);
+  stock=await getBloodStock();
+  renderDashboard(); renderHistory(); renderStock(); loadProfile();
+}).catch(()=>{});
+
+function renderDashboard(){
+  document.getElementById('s-total').textContent=me.totalDonations||0;
+  document.getElementById('s-blood').innerHTML=`<span class="bg-badge ${bgClass(me.bloodGroup)}">${me.bloodGroup||'—'}</span>`;
+  document.getElementById('s-last').textContent=fmtDate(me.lastDonation)||'Never';
+  document.getElementById('s-status').innerHTML=`<span class="badge ${me.status==='Active'?'badge-green':'badge-red'}">${me.status||'Active'}</span>`;
+  document.getElementById('info-name').textContent=me.name;
+  document.getElementById('info-blood').innerHTML=`<span class="bg-badge ${bgClass(me.bloodGroup)}">${me.bloodGroup||'—'}</span>`;
+  document.getElementById('info-phone').textContent=me.phone||'—';
+  document.getElementById('info-don').textContent=me.totalDonations||0;
+  document.getElementById('info-last').textContent=fmtDate(me.lastDonation)||'Never';
+  document.getElementById('info-status').innerHTML=`<span class="badge ${me.status==='Active'?'badge-green':'badge-red'}">${me.status||'Active'}</span>`;
+  document.getElementById('recent-history').innerHTML=myDonations.slice(0,4).map(d=>`
+    <div class="card-box" style="margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:center">
+      <div><strong style="color:var(--white)">${fmtDate(d.donatedAt)}</strong><div style="font-size:.75rem;color:var(--muted)">${d.units||1} unit(s)</div></div>
+      <span class="bg-badge ${bgClass(d.bloodGroup)}">${d.bloodGroup}</span>
+    </div>`).join('')||'<p class="text-muted">No donations yet</p>';
+  document.getElementById('dash-stock').innerHTML=stock.map(s=>`
+    <div class="stock-card ${s.units<=s.minUnits?'low':'ok'}" style="padding:.8rem">
+      <div class="stock-bg ${bgClass(s.bloodGroup)}" style="font-size:1.2rem">${s.bloodGroup}</div>
+      <div class="stock-units" style="font-size:1.5rem">${s.units}</div>
+      <div class="stock-label" style="font-size:.62rem">units</div>
+    </div>`).join('');
+}
+
+function renderHistory(){
+  const tbody=document.getElementById('history-tbody');
+  if(!myDonations.length){tbody.innerHTML=`<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem">No donations recorded yet. Contact admin after donating.</td></tr>`;return;}
+  tbody.innerHTML=myDonations.map(d=>`<tr>
+    <td>${fmtDate(d.donatedAt)}</td>
+    <td><span class="bg-badge ${bgClass(d.bloodGroup)}">${d.bloodGroup}</span></td>
+    <td>${d.units||1} unit(s)</td><td>${d.notes||'—'}</td>
+  </tr>`).join('');
+}
+
+function renderStock(){
+  document.getElementById('stock-grid').innerHTML=stock.map(s=>`
+    <div class="stock-card ${s.units<=s.minUnits?'low':'ok'}">
+      <div class="stock-bg ${bgClass(s.bloodGroup)}">${s.bloodGroup}</div>
+      <div class="stock-units">${s.units}</div>
+      <div class="stock-label">units</div>
+      <div class="badge ${s.units<=s.minUnits?'badge-red':'badge-green'}" style="margin-top:.5rem;display:inline-block">${s.units<=s.minUnits?'⚠ Low':'✓ OK'}</div>
+    </div>`).join('');
+}
+
+function loadProfile(){
+  document.getElementById('p-name-disp').textContent=me.name;
+  document.getElementById('p-avatar').textContent=me.name[0].toUpperCase();
+  document.getElementById('p-name').value=me.name||'';
+  document.getElementById('p-phone').value=me.phone||'';
+  document.getElementById('p-blood').value=me.bloodGroup||'';
+  document.getElementById('p-age').value=me.age||'';
+  document.getElementById('p-address').value=me.address||'';
+}
+window.saveProfile=async()=>{
+  const data={name:document.getElementById('p-name').value,phone:document.getElementById('p-phone').value,bloodGroup:document.getElementById('p-blood').value,age:document.getElementById('p-age').value,address:document.getElementById('p-address').value};
+  await updateUser(me.uid,data);
+  const {updateDonor}=await import('./db.js');
+  await updateDonor(me.uid,data);
+  const el=document.getElementById('p-success');el.textContent='✅ Profile saved!';el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);
+};
+
+window.showPage=(id,btn)=>{
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const titles={dashboard:'My Dashboard',history:'My Donations',stock:'Blood Availability',profile:'My Profile'};
+  document.getElementById('page-title').textContent=titles[id]||id;
+  if(btn)btn.classList.add('active');
+};
+window.handleLogout=()=>{import('./auth.js').then(m=>m.logoutUser());};
+</script>
+</body>
+</html>
