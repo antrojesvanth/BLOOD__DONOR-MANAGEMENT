@@ -17,52 +17,60 @@
 
 <div class="container">
 
-  <!-- LEFT SIDE -->
-  <div class="left">
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
     <h1>🩸 BloodLink</h1>
-    <p>Blood Bank Management System</p>
+    <p>BLOOD BANK MANAGEMENT SYSTEM</p>
+
+    <ul>
+      <li>Blood Stock Management</li>
+      <li>Donor Registration</li>
+      <li>Hospital Blood Requests</li>
+      <li>Donation History</li>
+    </ul>
   </div>
 
-  <!-- RIGHT SIDE -->
-  <div class="right">
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
 
     <!-- Tabs -->
     <div class="tabs">
-      <button class="ptab active" onclick="switchTab('login', this)">Login</button>
-      <button class="ptab" onclick="switchTab('register', this)">Register</button>
+      <button class="tab active" onclick="switchTab('login', this)">Login</button>
+      <button class="tab" onclick="switchTab('register', this)">Register</button>
     </div>
 
     <!-- LOGIN -->
-    <div id="login-section" class="form-section">
-      <h2>Welcome Back</h2>
+    <div id="loginForm" class="auth-form">
+      <h2>Welcome back</h2>
 
-      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="email" id="loginEmail" placeholder="Email Address">
       <input type="password" id="loginPassword" placeholder="Password">
 
       <button onclick="login()">Sign In</button>
     </div>
 
     <!-- REGISTER -->
-    <div id="register-section" class="form-section hidden">
+    <div id="registerForm" class="auth-form hidden">
       <h2>Create Account</h2>
 
-      <input type="email" id="registerEmail" placeholder="Email">
+      <input type="email" id="registerEmail" placeholder="Email Address">
       <input type="password" id="registerPassword" placeholder="Password">
 
       <button onclick="register()">Register</button>
     </div>
 
   </div>
+
 </div>
 
-<!-- JS -->
+<!-- TAB SCRIPT -->
 <script>
 function switchTab(tab, el) {
-  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.form-section').forEach(s => s.classList.add('hidden'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.auth-form').forEach(f => f.classList.add('hidden'));
 
   el.classList.add('active');
-  document.getElementById(tab + '-section').classList.remove('hidden');
+  document.getElementById(tab + 'Form').classList.remove('hidden');
 }
 </script>
 
