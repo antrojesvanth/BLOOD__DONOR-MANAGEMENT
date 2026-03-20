@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BloodLink — Admin Dashboard</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">🩸</div>
+    <div class="sb-logo-text"><h1>BloodLink</h1><p>Admin Portal</p></div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section-label">Overview</div>
+    <button class="nav-item active" onclick="showPage('dashboard',this)"><span class="ni">🏠</span>Dashboard</button>
+    <div class="sb-section-label">Management</div>
+    <button class="nav-item" onclick="showPage('stock',this)"><span class="ni">🩸</span>Blood Stock</button>
+    <button class="nav-item" onclick="showPage('donors',this)"><span class="ni">👥</span>Donors</button>
+    <button class="nav-item" onclick="showPage('donations',this)"><span class="ni">📋</span>Donations</button>
+    <button class="nav-item" onclick="showPage('requests',this)"><span class="ni">🏥</span>Blood Requests</button>
+    <button class="nav-item" onclick="showPage('hospitals',this)"><span class="ni">🏨</span>Hospitals</button>
+    <div class="sb-section-label">Account</div>
+    <button class="nav-item" onclick="showPage('profile',this)"><span class="ni">👤</span>Profile</button>
+  </div>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="sb-avatar" id="admin-av">A</div>
+      <div class="sb-user-info"><p id="admin-name">Admin</p><span class="role-pill rp-admin">Admin</span></div>
+    </div>
+    <button class="sb-logout" onclick="handleLogout()">← Sign Out</button>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <span class="topbar-title" id="page-title">Dashboard</span>
+    <div class="topbar-right">
+      <div class="tb-date" id="today-date"></div>
+      <span class="role-pill rp-admin">Admin</span>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-icon-box si-red">👥</div><div class="stat-info"><div class="stat-val" id="s-donors">—</div><div class="stat-lbl">Total Donors</div></div></div>
+      <div class="stat-card"><div class="stat-icon-box si-green">🩸</div><div class="stat-info"><div class="stat-val" id="s-donations">—</div><div class="stat-lbl">Total Donations</div></div></div>
+      <div class="stat-card"><div class="stat-icon-box si-blue">🏥</div><div class="stat-info"><div class="stat-val" id="s-requests">—</div><div class="stat-lbl">Blood Requests</div></div></div>
+      <div class="stat-card"><div class="stat-icon-box si-amber">⚠️</div><div class="stat-info"><div class="stat-val" id="s-low">—</div><div class="stat-lbl">Low Stock Alerts</div></div></div>
+    </div>
+    <div class="two-grid">
+      <div>
+        <div class="sec-head"><span class="sec-title">Blood Stock Overview</span><button class="sec-btn" onclick="showPage('stock',null)">Manage →</button></div>
+        <div class="blood-grid" id="dash-stock" style="grid-template-columns:repeat(4,1fr)"><p class="text-muted">Loading...</p></div>
+        <div class="sec-head" style="margin-top:1.25rem"><span class="sec-title">Recent Donations</span></div>
+        <div id="dash-donations"><p class="text-muted">Loading...</p></div>
+      </div>
+      <div>
+        <div class="sec-head"><span class="sec-title">Pending Requests</span><button class="sec-btn" onclick="showPage('requests',null)">View All →</button></div>
+        <div id="dash-requests"><p class="text-muted">Loading...</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOOD STOCK -->
+  <div class="page" id="page-stock">
+    <div class="sec-head"><span class="sec-title">Blood Stock Management</span><button class="btn btn-primary btn-sm" onclick="openStockModal()">+ Update Stock</button></div>
+    <div class="blood-grid" id="stock-grid"><p class="text-muted">Loading...</p></div>
+    <div class="card">
+      <div class="card-header"><h3>Record Donation</h3></div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem">
+          <div class="form-group"><label>Select Donor</label><select id="don-donor"><option value="">— Choose —</option></select></div>
+          <div class="form-group"><label>Blood Group</label><select id="don-blood"><option value="">—</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+          <div class="form-group"><label>Units</label><input type="number" id="don-units" placeholder="1" min="1"/></div>
+        </div>
+        <div class="form-group"><label>Date</label><input type="date" id="don-date"/></div>
+        <div class="form-group"><label>Notes</label><input type="text" id="don-notes" placeholder="Any notes..."/></div>
+        <button class="btn btn-primary" onclick="recordDonation()">Record Donation</button>
+        <div class="alert a-ok" id="don-ok" style="margin-top:1rem"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONORS -->
+  <div class="page" id="page-donors">
+    <div class="sec-head">
+      <span class="sec-title">All Donors</span>
+      <div class="search-bar"><span style="color:var(--text-muted)">🔍</span><input type="text" placeholder="Search donors..." oninput="searchDonors(this.value)"/></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterDonors('all',this)">All</button>
+      <button class="tab" onclick="filterDonors('A+',this)">A+</button>
+      <button class="tab" onclick="filterDonors('B+',this)">B+</button>
+      <button class="tab" onclick="filterDonors('O+',this)">O+</button>
+      <button class="tab" onclick="filterDonors('AB+',this)">AB+</button>
+      <button class="tab" onclick="filterDonors('O-',this)">O-</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Name</th><th>Blood Group</th><th>Phone</th><th>Donations</th><th>Last Donation</th><th>Status</th></tr></thead>
+      <tbody id="donors-tbody"><tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem">Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- DONATIONS -->
+  <div class="page" id="page-donations">
+    <div class="sec-head"><span class="sec-title">Donation History</span></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Donor</th><th>Blood Group</th><th>Units</th><th>Date</th><th>Notes</th></tr></thead>
+      <tbody id="donations-tbody"><tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem">Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- REQUESTS -->
+  <div class="page" id="page-requests">
+    <div class="sec-head"><span class="sec-title">Blood Requests</span></div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterReqs('all',this)">All</button>
+      <button class="tab" onclick="filterReqs('pending',this)">Pending</button>
+      <button class="tab" onclick="filterReqs('approved',this)">Approved</button>
+      <button class="tab" onclick="filterReqs('rejected',this)">Rejected</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Hospital</th><th>Blood Group</th><th>Units</th><th>Priority</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="requests-tbody"><tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem">Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- HOSPITALS -->
+  <div class="page" id="page-hospitals">
+    <div class="sec-head"><span class="sec-title">Registered Hospitals</span></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Hospital Name</th><th>Email</th><th>Phone</th><th>Registered</th></tr></thead>
+      <tbody id="hospitals-tbody"><tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem">Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="page-profile">
+    <div class="sec-head"><span class="sec-title">Admin Profile</span></div>
+    <div style="max-width:500px">
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+            <div class="sb-avatar" style="width:56px;height:56px;font-size:1.3rem" id="p-av">A</div>
+            <div><h3 id="p-name-d" style="font-size:1.1rem;color:var(--text-primary)">—</h3><span class="role-pill rp-admin">Admin</span></div>
+          </div>
+          <div class="form-group"><label>Full Name</label><input type="text" id="p-name"/></div>
+          <div class="form-group"><label>Email</label><input type="email" id="p-email" disabled style="opacity:.5"/></div>
+          <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+          <div class="alert a-ok" id="p-ok" style="margin-top:1rem"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Stock Modal -->
+<div class="modal-overlay" id="stock-modal">
+  <div class="modal">
+    <div class="modal-head"><h3>Update Blood Stock</h3><button class="modal-close" onclick="closeModal('stock-modal')">✕</button></div>
+    <div class="form-group"><label>Blood Group</label><select id="sm-grp"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+    <div class="form-group"><label>Available Units</label><input type="number" id="sm-units" placeholder="50" min="0"/></div>
+    <div class="form-group"><label>Minimum Alert Level</label><input type="number" id="sm-min" placeholder="10" min="0"/></div>
+    <button class="btn btn-primary" style="width:100%" onclick="saveStock()">Update Stock</button>
+    <div class="alert a-ok" id="sm-ok" style="margin-top:1rem"></div>
+  </div>
+</div>
+
+<script type="module">
+import { requireAuth, logoutUser } from './auth.js';
+import { getAllDonors, getAllDonations, getAllRequests, getAllHospitals, getBloodStock, updateBloodStock, addDonation, updateRequest, updateUser, getUser, fmtDate, fmtDateTime } from './db.js';
+import { doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { db } from './firebase-config.js';
+
+let me=null, donors=[], donations=[], requests=[], hospitals=[], stock=[];
+const bgClass=(g)=>({'A+':'bg-Ap','A-':'bg-Am','B+':'bg-Bp','B-':'bg-Bm','AB+':'bg-ABp','AB-':'bg-ABm','O+':'bg-Op','O-':'bg-Om'}[g]||'');
+
+requireAuth(['admin']).then(async user=>{
+  me=user;
+  document.getElementById('admin-name').textContent=user.name;
+  document.getElementById('admin-av').textContent=user.name[0].toUpperCase();
+  document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  loadAll();
+}).catch(()=>{});
+
+async function loadAll(){
+  donors=await getAllDonors(); donations=await getAllDonations();
+  requests=await getAllRequests(); hospitals=await getAllHospitals(); stock=await getBloodStock();
+  renderDashboard(); renderStock(); renderDonors(donors); renderDonations();
+  renderRequests(requests); renderHospitals(); loadProfile(); populateDonorSelect();
+}
+
+function renderDashboard(){
+  document.getElementById('s-donors').textContent=donors.length;
+  document.getElementById('s-donations').textContent=donations.length;
+  document.getElementById('s-requests').textContent=requests.length;
+  document.getElementById('s-low').textContent=stock.filter(s=>s.units<=s.minUnits).length;
+  document.getElementById('dash-stock').innerHTML=stock.map(s=>`
+    <div class="blood-card ${s.units<=s.minUnits?'low':'ok'}">
+      <div class="bc-type"><span class="bg-b ${bgClass(s.bloodGroup)}">${s.bloodGroup}</span></div>
+      <div class="bc-units">${s.units}</div>
+      <div class="bc-label">units</div>
+      <div class="bc-bar"><div class="bc-fill" style="width:${Math.min((s.units/50)*100,100)}%;background:${s.units<=s.minUnits?'var(--red)':'var(--green)'}"></div></div>
+    </div>`).join('');
+  document.getElementById('dash-donations').innerHTML=donations.slice(0,3).map(d=>`
+    <div class="card" style="margin-bottom:.6rem">
+      <div class="card-body" style="display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem">
+        <div><strong style="font-size:.88rem">${d.donorName||'—'}</strong><div style="font-size:.74rem;color:var(--text-muted)">${fmtDate(d.donatedAt)}</div></div>
+        <span class="bg-b ${bgClass(d.bloodGroup)}">${d.bloodGroup}</span>
+      </div>
+    </div>`).join('')||'<p class="text-muted">No donations yet</p>';
+  document.getElementById('dash-requests').innerHTML=requests.filter(r=>!r.status||r.status==='pending').slice(0,4).map(r=>`
+    <div class="card" style="margin-bottom:.6rem">
+      <div class="card-body" style="padding:.85rem 1rem">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><strong style="font-size:.88rem">${r.hospitalName||'Hospital'}</strong><div style="font-size:.74rem;color:var(--text-muted)">${r.units} units · ${fmtDate(r.requestedAt)}</div></div>
+          <span class="bg-b ${bgClass(r.bloodGroup)}">${r.bloodGroup}</span>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.75rem">
+          <button class="btn btn-success btn-sm" onclick="approveReq('${r.id}')">✓ Approve</button>
+          <button class="btn btn-danger btn-sm" onclick="rejectReq('${r.id}')">✗ Reject</button>
+        </div>
+      </div>
+    </div>`).join('')||'<p class="text-muted">No pending requests</p>';
+}
+
+function renderStock(){
+  document.getElementById('stock-grid').innerHTML=stock.map(s=>`
+    <div class="blood-card ${s.units<=s.minUnits?'low':'ok'}">
+      <div class="bc-type"><span class="bg-b ${bgClass(s.bloodGroup)}">${s.bloodGroup}</span></div>
+      <div class="bc-units">${s.units}</div>
+      <div class="bc-label">units available</div>
+      <div class="bc-bar"><div class="bc-fill" style="width:${Math.min((s.units/50)*100,100)}%;background:${s.units<=s.minUnits?'var(--red)':'var(--green)'}"></div></div>
+      <div class="bc-status"><span class="badge ${s.units<=s.minUnits?'b-red':'b-green'}">${s.units<=s.minUnits?'⚠ Low':'✓ OK'}</span></div>
+    </div>`).join('');
+}
+
+function renderDonors(list){
+  const tbody=document.getElementById('donors-tbody');
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem">No donors registered yet</td></tr>`;return;}
+  tbody.innerHTML=list.map(d=>`<tr>
+    <td><strong>${d.name}</strong></td>
+    <td><span class="bg-b ${bgClass(d.bloodGroup)}">${d.bloodGroup||'—'}</span></td>
+    <td>${d.phone||'—'}</td><td>${d.totalDonations||0}</td>
+    <td>${fmtDate(d.lastDonation)}</td>
+    <td><span class="badge ${d.status==='Active'?'b-green':'b-red'}">${d.status||'Active'}</span></td>
+  </tr>`).join('');
+}
+window.searchDonors=(q)=>renderDonors(donors.filter(d=>d.name.toLowerCase().includes(q.toLowerCase())));
+window.filterDonors=(g,btn)=>{btn.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderDonors(g==='all'?donors:donors.filter(d=>d.bloodGroup===g));};
+
+function renderDonations(){
+  const tbody=document.getElementById('donations-tbody');
+  if(!donations.length){tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem">No donations yet</td></tr>`;return;}
+  tbody.innerHTML=donations.map(d=>`<tr><td><strong>${d.donorName||'—'}</strong></td><td><span class="bg-b ${bgClass(d.bloodGroup)}">${d.bloodGroup}</span></td><td>${d.units||1} units</td><td>${fmtDate(d.donatedAt)}</td><td>${d.notes||'—'}</td></tr>`).join('');
+}
+
+function renderRequests(list){
+  const tbody=document.getElementById('requests-tbody');
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem">No requests yet</td></tr>`;return;}
+  tbody.innerHTML=list.map(r=>`<tr>
+    <td><strong>${r.hospitalName||'—'}</strong></td>
+    <td><span class="bg-b ${bgClass(r.bloodGroup)}">${r.bloodGroup}</span></td>
+    <td>${r.units} units</td>
+    <td><span class="badge ${r.priority==='urgent'?'b-red':r.priority==='high'?'b-amber':'b-blue'}">${r.priority||'normal'}</span></td>
+    <td>${fmtDate(r.requestedAt)}</td>
+    <td><span class="badge ${r.status==='approved'?'b-green':r.status==='rejected'?'b-red':'b-amber'}">${r.status||'pending'}</span></td>
+    <td>${(!r.status||r.status==='pending')?`<button class="btn btn-success btn-sm" onclick="approveReq('${r.id}')">Approve</button> <button class="btn btn-danger btn-sm" onclick="rejectReq('${r.id}')">Reject</button>`:'<span style="color:var(--text-muted);font-size:.78rem">Done</span>'}</td>
+  </tr>`).join('');
+}
+window.filterReqs=(f,btn)=>{btn.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderRequests(f==='all'?requests:requests.filter(r=>(r.status||'pending')===f));};
+window.approveReq=async(id)=>{await updateRequest(id,{status:'approved'});requests=await getAllRequests();renderRequests(requests);renderDashboard();};
+window.rejectReq=async(id)=>{await updateRequest(id,{status:'rejected'});requests=await getAllRequests();renderRequests(requests);renderDashboard();};
+
+function renderHospitals(){
+  const tbody=document.getElementById('hospitals-tbody');
+  if(!hospitals.length){tbody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem">No hospitals registered</td></tr>`;return;}
+  tbody.innerHTML=hospitals.map(h=>`<tr><td><strong>${h.hospitalName||h.name}</strong></td><td>${h.email}</td><td>${h.phone||'—'}</td><td>${fmtDate(h.createdAt)}</td></tr>`).join('');
+}
+
+function populateDonorSelect(){
+  const sel=document.getElementById('don-donor');
+  sel.innerHTML='<option value="">— Choose Donor —</option>'+donors.map(d=>`<option value="${d.id}" data-blood="${d.bloodGroup}">${d.name} (${d.bloodGroup||'?'})</option>`).join('');
+  sel.onchange=()=>{const opt=sel.options[sel.selectedIndex];if(opt.dataset.blood)document.getElementById('don-blood').value=opt.dataset.blood;};
+}
+
+window.recordDonation=async()=>{
+  const donorId=document.getElementById('don-donor').value,blood=document.getElementById('don-blood').value,units=+document.getElementById('don-units').value||1,date=document.getElementById('don-date').value,notes=document.getElementById('don-notes').value;
+  if(!donorId||!blood)return alert('Select donor and blood group.');
+  const donor=donors.find(d=>d.id===donorId);
+  await addDonation({donorUid:donorId,donorName:donor?.name||'',bloodGroup:blood,units,notes,date});
+  const s=stock.find(x=>x.bloodGroup===blood);if(s)await updateBloodStock(blood,{units:(s.units||0)+units});
+  const {updateDonor}=await import('./db.js');await updateDonor(donorId,{totalDonations:(donor?.totalDonations||0)+1,lastDonation:date});
+  const el=document.getElementById('don-ok');el.textContent='✅ Donation recorded!';el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);
+  donations=await getAllDonations();stock=await getBloodStock();renderDonations();renderStock();renderDashboard();
+};
+
+window.openStockModal=()=>document.getElementById('stock-modal').classList.add('open');
+window.saveStock=async()=>{
+  const g=document.getElementById('sm-grp').value,units=+document.getElementById('sm-units').value||0,min=+document.getElementById('sm-min').value||10;
+  await updateBloodStock(g,{bloodGroup:g,units,minUnits:min});
+  const el=document.getElementById('sm-ok');el.textContent='✅ Updated!';el.classList.add('show');
+  setTimeout(()=>{el.classList.remove('show');closeModal('stock-modal');},1200);
+  stock=await getBloodStock();renderStock();renderDashboard();
+};
+
+function loadProfile(){document.getElementById('p-name-d').textContent=me.name;document.getElementById('p-av').textContent=me.name[0].toUpperCase();document.getElementById('p-name').value=me.name||'';document.getElementById('p-email').value=me.email||'';}
+window.saveProfile=async()=>{await updateUser(me.uid,{name:document.getElementById('p-name').value});const el=document.getElementById('p-ok');el.textContent='✅ Saved!';el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);};
+
+window.showPage=(id,btn)=>{
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const titles={dashboard:'Dashboard',stock:'Blood Stock',donors:'All Donors',donations:'Donation History',requests:'Blood Requests',hospitals:'Hospitals',profile:'Admin Profile'};
+  document.getElementById('page-title').textContent=titles[id]||id;
+  if(btn)btn.classList.add('active');
+};
+window.closeModal=(id)=>document.getElementById(id).classList.remove('open');
+window.handleLogout=()=>{import('./auth.js').then(m=>m.logoutUser());};
+</script>
+</body>
+</html>

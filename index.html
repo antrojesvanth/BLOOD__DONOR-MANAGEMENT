@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BloodLink — Blood Bank Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--red:#dc2626;--red-dark:#991b1b;--red-light:#fee2e2;--ink:#0f172a;--ink2:#1e293b;--muted:#94a3b8;--border:#e2e8f0;--bg:#f8fafc;--white:#ffffff;--green:#16a34a;--green-bg:#dcfce7;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:grid;grid-template-columns:1fr 480px;}
+
+/* LEFT */
+.left{background:var(--ink2);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:3.5rem;min-height:100vh;}
+.left-noise{position:absolute;inset:0;background-image:radial-gradient(circle at 20% 80%,rgba(220,38,38,0.15) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(220,38,38,0.08) 0%,transparent 50%);pointer-events:none;}
+.left-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.left-top{position:relative;z-index:1;}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:4rem;}
+.logo-box{width:40px;height:40px;background:var(--red);border-radius:10px;display:grid;place-items:center;font-size:1.2rem;}
+.logo-name{font-size:1.2rem;font-weight:700;color:#fff;letter-spacing:0.02em;}
+.hero-tag{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+.hero-tag::before{content:'';width:20px;height:1px;background:rgba(255,255,255,0.25);}
+.hero-h{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,4.5vw,3.8rem);font-weight:900;line-height:1.05;color:#fff;margin-bottom:1.2rem;}
+.hero-h span{color:#fca5a5;}
+.hero-p{font-size:0.88rem;line-height:1.8;color:rgba(255,255,255,0.45);max-width:380px;}
+.left-bottom{position:relative;z-index:1;}
+.stats{display:flex;gap:2.5rem;margin-bottom:2rem;}
+.sn{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:#fff;line-height:1;}
+.sl{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:3px;}
+.roles{display:flex;gap:8px;}
+.role-chip{font-size:0.7rem;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.55);background:rgba(255,255,255,0.04);}
+/* RIGHT */
+.right{background:var(--white);display:flex;flex-direction:column;justify-content:center;padding:3rem 3.5rem;overflow-y:auto;border-left:3px solid var(--red);}
+.form-kicker{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:0.5rem;}
+.form-h{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--ink);line-height:1.1;margin-bottom:0.4rem;}
+.form-sub{font-size:0.82rem;color:var(--muted);margin-bottom:1.75rem;}
+.fs{animation:fu .25s ease;}
+.fs.hidden{display:none;}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.fld{margin-bottom:0.9rem;}
+.fld label{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.04em;color:var(--ink2);margin-bottom:5px;}
+.fld input,.fld select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.7rem 0.9rem;color:var(--ink);font-size:0.875rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;}
+.fld input:focus,.fld select:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,0.08);}
+.fld select option{background:#fff;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-red{width:100%;padding:0.85rem;background:var(--red);color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:0.5rem;}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-1px);box-shadow:0 6px 20px rgba(220,38,38,0.25);}
+.btn-red:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none;}
+.or-row{display:flex;align-items:center;gap:10px;margin:0.9rem 0;font-size:0.74rem;color:var(--muted);}
+.or-row::before,.or-row::after{content:'';flex:1;height:1px;background:var(--border);}
+.btn-g{width:100%;padding:0.75rem;background:#fff;color:#3c4043;border:1px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;}
+.btn-g:hover{border-color:var(--red);background:var(--red-light);}
+.btn-g:disabled{opacity:.6;cursor:not-allowed;}
+.gi{width:18px;height:18px;}
+.al{padding:10px 14px;border-radius:8px;font-size:.82rem;margin-bottom:10px;display:none;font-weight:500;}
+.al.show{display:block;}
+.al-e{background:var(--red-light);border-left:3px solid var(--red);color:var(--red-dark);}
+.al-s{background:var(--green-bg);border-left:3px solid var(--green);color:#166534;}
+.sp{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.note{margin-top:1.5rem;text-align:center;font-size:0.75rem;color:var(--muted);padding-top:1.2rem;border-top:1px solid var(--border);}
+.note a{color:var(--red);font-weight:600;cursor:pointer;}
+@media(max-width:860px){body{grid-template-columns:1fr;}.left{display:none;}.right{min-height:100vh;border-left:none;border-top:4px solid var(--red);padding:2rem 1.5rem;}}
+</style>
+</head>
+<body>
+<div class="left">
+  <div class="left-noise"></div>
+  <div class="left-grid"></div>
+  <div class="left-top">
+    <div class="logo"><div class="logo-box">🩸</div><span class="logo-name">BloodLink</span></div>
+    <div class="hero-tag">Blood Bank Management System</div>
+    <h1 class="hero-h">Saving lives<br/>through <span>smart</span><br/>blood management.</h1>
+    <p class="hero-p">A unified medical platform connecting admins, donors and hospitals. Manage inventory, process donations and fulfill urgent requests — all in one place.</p>
+  </div>
+  <div class="left-bottom">
+    <div class="stats">
+      <div><div class="sn">8</div><div class="sl">Blood Types</div></div>
+      <div><div class="sn">3</div><div class="sl">User Roles</div></div>
+      <div><div class="sn">24/7</div><div class="sl">Live Tracking</div></div>
+    </div>
+    <div class="roles">
+      <span class="role-chip">Admin</span>
+      <span class="role-chip">Donor</span>
+      <span class="role-chip">Hospital</span>
+    </div>
+  </div>
+</div>
+
+<div class="right">
+  <!-- LOGIN -->
+  <div class="fs" id="login-section">
+    <div class="form-kicker">Secure Medical Portal</div>
+    <h2 class="form-h">Sign In</h2>
+    <p class="form-sub">Access your BloodLink account</p>
+    <div class="al al-e" id="login-err"></div>
+    <div class="fld"><label>Email Address</label><input type="email" id="login-email" placeholder="doctor@hospital.com" onkeydown="if(event.key==='Enter')handleLogin()"/></div>
+    <div class="fld"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()"/></div>
+    <button class="btn-red" id="login-btn" onclick="handleLogin()">Sign In</button>
+    <div class="or-row">or</div>
+    <button class="btn-g" id="google-btn" onclick="handleGoogleLogin()">
+      <svg class="gi" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Continue with Google
+    </button>
+    <div class="note">New here? <a onclick="switchTab('register')">Create an account →</a></div>
+  </div>
+
+  <!-- REGISTER -->
+  <div class="fs hidden" id="reg-section">
+    <div class="form-kicker">New Account</div>
+    <h2 class="form-h">Register</h2>
+    <p class="form-sub">Create your BloodLink account</p>
+    <div class="al al-e" id="reg-err"></div>
+    <div class="al al-s" id="reg-ok"></div>
+    <div class="two">
+      <div class="fld"><label>Full Name</label><input type="text" id="reg-name" placeholder="Your name"/></div>
+      <div class="fld"><label>Role</label>
+        <select id="reg-role" onchange="toggleFields()">
+          <option value="">Select role</option>
+          <option value="admin">Admin</option>
+          <option value="donor">Donor</option>
+          <option value="hospital">Hospital</option>
+        </select>
+      </div>
+    </div>
+    <div class="fld"><label>Email Address</label><input type="email" id="reg-email" placeholder="you@example.com"/></div>
+    <div id="donor-extra" style="display:none">
+      <div class="two">
+        <div class="fld"><label>Blood Group</label>
+          <select id="reg-blood"><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
+        </div>
+        <div class="fld"><label>Phone</label><input type="tel" id="reg-phone" placeholder="9876543210"/></div>
+      </div>
+    </div>
+    <div id="hospital-extra" style="display:none">
+      <div class="fld"><label>Hospital Name</label><input type="text" id="reg-hospital" placeholder="City General Hospital"/></div>
+      <div class="fld"><label>Phone</label><input type="tel" id="reg-hphone" placeholder="9876543210"/></div>
+    </div>
+    <div class="two">
+      <div class="fld"><label>Password</label><input type="password" id="reg-pass" placeholder="Min 6 chars"/></div>
+      <div class="fld"><label>Confirm</label><input type="password" id="reg-pass2" placeholder="Repeat"/></div>
+    </div>
+    <button class="btn-red" id="reg-btn" onclick="handleRegister()">Create Account</button>
+    <div class="note">Already registered? <a onclick="switchTab('login')">Sign in →</a></div>
+  </div>
+</div>
+
+<script>
+function switchTab(t){if(window._st)window._st(t);}
+function toggleFields(){if(window._tf)window._tf();}
+function handleLogin(){if(window._hl)window._hl();}
+function handleGoogleLogin(){if(window._hgl)window._hgl();}
+function handleRegister(){if(window._hr)window._hr();}
+</script>
+<script type="module">
+import { auth, db } from './firebase-config.js';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const dash={admin:'dashboard-admin.html',donor:'dashboard-donor.html',hospital:'dashboard-hospital.html'};
+onAuthStateChanged(auth,async(u)=>{if(!u)return;try{const s=await getDoc(doc(db,'users',u.uid));if(s.exists()){const d=s.data();sessionStorage.setItem('bl_uid',d.uid);sessionStorage.setItem('bl_role',d.role);sessionStorage.setItem('bl_name',d.name);window.location.href=dash[d.role]||'index.html';}}catch(e){}});
+function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),6000);}
+function showOk(id,msg){const el=document.getElementById(id);el.textContent=msg;el.classList.add('show');}
+function setBusy(id,yes,lbl){const b=document.getElementById(id);b.disabled=yes;b.innerHTML=yes?'<span class="sp"></span>Please wait...':lbl;}
+window._st=(t)=>{document.getElementById('login-section').classList.toggle('hidden',t!=='login');document.getElementById('reg-section').classList.toggle('hidden',t!=='register');};
+window._tf=()=>{const r=document.getElementById('reg-role').value;document.getElementById('donor-extra').style.display=r==='donor'?'block':'none';document.getElementById('hospital-extra').style.display=r==='hospital'?'block':'none';};
+window._hl=async()=>{
+  const email=document.getElementById('login-email').value.trim(),pass=document.getElementById('login-pass').value;
+  if(!email||!pass)return showErr('login-err','⚠ Please fill in email and password.');
+  setBusy('login-btn',true,'Sign In');
+  try{const c=await signInWithEmailAndPassword(auth,email,pass);const s=await getDoc(doc(db,'users',c.user.uid));if(!s.exists())throw new Error('Profile not found.');const d=s.data();sessionStorage.setItem('bl_uid',c.user.uid);sessionStorage.setItem('bl_role',d.role);sessionStorage.setItem('bl_name',d.name);window.location.href=dash[d.role]||'index.html';}
+  catch(e){setBusy('login-btn',false,'Sign In');showErr('login-err',e.code==='auth/invalid-credential'?'❌ Wrong email or password.':e.code==='auth/too-many-requests'?'⚠ Too many attempts.':'❌ '+e.message);}
+};
+window._hgl=async()=>{
+  const btn=document.getElementById('google-btn');btn.disabled=true;btn.innerHTML='<span class="sp" style="border-top-color:#4285F4"></span> Signing in...';
+  try{const r=await signInWithPopup(auth,new GoogleAuthProvider());const uid=r.user.uid;const s=await getDoc(doc(db,'users',uid));let role='donor';if(s.exists()){const d=s.data();role=d.role;sessionStorage.setItem('bl_uid',uid);sessionStorage.setItem('bl_role',role);sessionStorage.setItem('bl_name',d.name);}else{const name=r.user.displayName||'User',email=r.user.email;const pd={uid,name,email,role:'donor',bloodGroup:'',phone:'',totalDonations:0,lastDonation:null,status:'Active',createdAt:serverTimestamp()};await setDoc(doc(db,'users',uid),pd);await setDoc(doc(db,'donors',uid),pd);sessionStorage.setItem('bl_uid',uid);sessionStorage.setItem('bl_role','donor');sessionStorage.setItem('bl_name',name);}window.location.href=dash[role]||'index.html';}
+  catch(e){btn.disabled=false;btn.innerHTML=`<svg class="gi" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continue with Google`;if(e.code!=='auth/popup-closed-by-user')showErr('login-err','❌ '+e.message);}
+};
+window._hr=async()=>{
+  const name=document.getElementById('reg-name').value.trim(),role=document.getElementById('reg-role').value,email=document.getElementById('reg-email').value.trim(),pass=document.getElementById('reg-pass').value,pass2=document.getElementById('reg-pass2').value;
+  if(!name)return showErr('reg-err','⚠ Enter your name.');if(!role)return showErr('reg-err','⚠ Select a role.');if(!email)return showErr('reg-err','⚠ Enter your email.');if(!pass)return showErr('reg-err','⚠ Enter a password.');if(pass.length<6)return showErr('reg-err','⚠ Password must be at least 6 characters.');if(pass!==pass2)return showErr('reg-err','⚠ Passwords do not match.');
+  const bloodGroup=document.getElementById('reg-blood')?.value||'',phone=role==='donor'?(document.getElementById('reg-phone')?.value||''):(document.getElementById('reg-hphone')?.value||''),hospital=document.getElementById('reg-hospital')?.value||'';
+  setBusy('reg-btn',true,'Create Account');
+  try{const c=await createUserWithEmailAndPassword(auth,email,pass);const uid=c.user.uid;const pd={uid,name,email,role,createdAt:serverTimestamp(),...(role==='donor'?{bloodGroup,phone,totalDonations:0,lastDonation:null,status:'Active'}:{}),...(role==='hospital'?{hospitalName:hospital||name,phone}:{})};await setDoc(doc(db,'users',uid),pd);await setDoc(doc(db,role+'s',uid),pd);sessionStorage.setItem('bl_uid',uid);sessionStorage.setItem('bl_role',role);sessionStorage.setItem('bl_name',name);showOk('reg-ok','✅ Account created! Redirecting...');setTimeout(()=>window.location.href=dash[role]||'index.html',1500);}
+  catch(e){setBusy('reg-btn',false,'Create Account');showErr('reg-err',e.code==='auth/email-already-in-use'?'❌ Email already registered.':'❌ '+e.message);}
+};
+</script>
+</body>
+</html>

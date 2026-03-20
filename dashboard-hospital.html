@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BloodLink — Hospital Dashboard</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">🩸</div>
+    <div class="sb-logo-text"><h1>BloodLink</h1><p>Hospital Portal</p></div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section-label">Overview</div>
+    <button class="nav-item active" onclick="showPage('dashboard',this)"><span class="ni">🏠</span>Dashboard</button>
+    <div class="sb-section-label">Blood Services</div>
+    <button class="nav-item" onclick="showPage('search',this)"><span class="ni">🔍</span>Search Blood</button>
+    <button class="nav-item" onclick="showPage('request',this)"><span class="ni">📋</span>Request Blood</button>
+    <button class="nav-item" onclick="showPage('myrequests',this)"><span class="ni">📂</span>My Requests</button>
+    <div class="sb-section-label">Account</div>
+    <button class="nav-item" onclick="showPage('profile',this)"><span class="ni">🏥</span>Hospital Profile</button>
+  </div>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="sb-avatar" id="hosp-av" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)">H</div>
+      <div class="sb-user-info"><p id="hosp-name">Hospital</p><span class="role-pill rp-hospital">Hospital</span></div>
+    </div>
+    <button class="sb-logout" onclick="handleLogout()">← Sign Out</button>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <span class="topbar-title" id="page-title">Dashboard</span>
+    <div class="topbar-right">
+      <div class="tb-date" id="today-date"></div>
+      <span class="role-pill rp-hospital">Hospital</span>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-icon-box si-blue">📋</div><div class="stat-info"><div class="stat-val" id="s-total">—</div><div class="stat-lbl">Total Requests</div></div></div>
+      <div class="stat-card"><div class="stat-icon-box si-green">✅</div><div class="stat-info"><div class="stat-val" id="s-approved">—</div><div class="stat-lbl">Approved</div></div></div>
+      <div class="stat-card"><div class="stat-icon-box si-amber">⏳</div><div class="stat-info"><div class="stat-val" id="s-pending">—</div><div class="stat-lbl">Pending</div></div></div>
+      <div class="stat-card"><div class="stat-icon-box si-red">❌</div><div class="stat-info"><div class="stat-val" id="s-rejected">—</div><div class="stat-lbl">Rejected</div></div></div>
+    </div>
+    <div class="two-grid">
+      <div>
+        <div class="sec-head"><span class="sec-title">Blood Availability</span><button class="sec-btn" onclick="showPage('search',null)">Search →</button></div>
+        <div class="blood-grid" id="dash-stock" style="grid-template-columns:repeat(4,1fr)"><p class="text-muted">Loading...</p></div>
+      </div>
+      <div>
+        <div class="sec-head"><span class="sec-title">My Recent Requests</span><button class="sec-btn" onclick="showPage('myrequests',null)">View All →</button></div>
+        <div id="recent-reqs"><p class="text-muted">Loading...</p></div>
+        <div style="margin-top:1rem">
+          <button class="btn btn-primary" style="width:100%" onclick="showPage('request',document.querySelector('[onclick*=request]'))">+ New Blood Request</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="page" id="page-search">
+    <div class="sec-head"><span class="sec-title">Search Blood by Group</span></div>
+    <div class="card" style="max-width:420px;margin-bottom:1.5rem"><div class="card-body">
+      <div class="form-group"><label>Select Blood Group</label>
+        <select id="search-grp" onchange="searchBlood(this.value)">
+          <option value="">— Select to search —</option>
+          <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+          <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+        </select>
+      </div>
+    </div></div>
+    <div id="search-result"></div>
+    <div class="sec-head"><span class="sec-title">All Blood Groups</span></div>
+    <div class="blood-grid" id="search-stock"><p class="text-muted">Loading...</p></div>
+  </div>
+
+  <!-- REQUEST -->
+  <div class="page" id="page-request">
+    <div class="sec-head"><span class="sec-title">Request Blood</span></div>
+    <div class="card" style="max-width:520px"><div class="card-body">
+      <div class="two-col">
+        <div class="form-group"><label>Blood Group</label>
+          <select id="req-blood"><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
+        </div>
+        <div class="form-group"><label>Units Required</label><input type="number" id="req-units" placeholder="2" min="1"/></div>
+      </div>
+      <div class="form-group"><label>Priority</label>
+        <select id="req-priority"><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent 🚨</option></select>
+      </div>
+      <div class="form-group"><label>Patient Name (optional)</label><input type="text" id="req-patient" placeholder="Patient name"/></div>
+      <div class="form-group"><label>Reason / Notes</label><textarea id="req-notes" rows="3" style="width:100%;background:var(--main-bg);border:1px solid var(--card-border);border-radius:8px;padding:.65rem .9rem;color:var(--text-primary);font-family:'Inter',sans-serif;outline:none;resize:vertical" placeholder="Reason for request..."></textarea></div>
+      <div class="alert a-err" id="req-err"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="submitRequest()">Submit Request</button>
+      <div class="alert a-ok" id="req-ok" style="margin-top:1rem"></div>
+    </div></div>
+  </div>
+
+  <!-- MY REQUESTS -->
+  <div class="page" id="page-myrequests">
+    <div class="sec-head"><span class="sec-title">My Blood Requests</span></div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterMyReqs('all',this)">All</button>
+      <button class="tab" onclick="filterMyReqs('pending',this)">Pending</button>
+      <button class="tab" onclick="filterMyReqs('approved',this)">Approved</button>
+      <button class="tab" onclick="filterMyReqs('rejected',this)">Rejected</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Blood Group</th><th>Units</th><th>Priority</th><th>Patient</th><th>Requested On</th><th>Status</th></tr></thead>
+      <tbody id="myreqs-tbody"><tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem">No requests yet</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="page-profile">
+    <div class="sec-head"><span class="sec-title">Hospital Profile</span></div>
+    <div style="max-width:500px"><div class="card"><div class="card-body">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+        <div class="sb-avatar" style="width:56px;height:56px;font-size:1.3rem;background:linear-gradient(135deg,#2563eb,#1d4ed8)" id="p-av">H</div>
+        <div><h3 id="p-name-d" style="font-size:1.1rem;color:var(--text-primary)">—</h3><span class="role-pill rp-hospital">Hospital</span></div>
+      </div>
+      <div class="form-group"><label>Hospital Name</label><input type="text" id="p-hname"/></div>
+      <div class="form-group"><label>Contact Person</label><input type="text" id="p-contact" placeholder="Dr. Name"/></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="p-phone" placeholder="9876543210"/></div>
+      <div class="form-group"><label>Address</label><input type="text" id="p-address" placeholder="Hospital address"/></div>
+      <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+      <div class="alert a-ok" id="p-ok" style="margin-top:1rem"></div>
+    </div></div></div>
+  </div>
+</main>
+
+<script type="module">
+import { requireAuth, logoutUser } from './auth.js';
+import { getUser, updateUser, getBloodStock, addRequest, getRequestsByHospital, fmtDate } from './db.js';
+
+let me=null, stock=[], myRequests=[];
+const bgClass=(g)=>({'A+':'bg-Ap','A-':'bg-Am','B+':'bg-Bp','B-':'bg-Bm','AB+':'bg-ABp','AB-':'bg-ABm','O+':'bg-Op','O-':'bg-Om'}[g]||'');
+
+requireAuth(['hospital']).then(async user=>{
+  me=user;
+  document.getElementById('hosp-name').textContent=user.hospitalName||user.name;
+  document.getElementById('hosp-av').textContent=(user.hospitalName||user.name)[0].toUpperCase();
+  document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  const fresh=await getUser(me.uid);me={...me,...fresh};
+  stock=await getBloodStock();myRequests=await getRequestsByHospital(me.uid);
+  renderDashboard();renderSearchStock();renderMyRequests(myRequests);loadProfile();
+}).catch(()=>{});
+
+function renderDashboard(){
+  document.getElementById('s-total').textContent=myRequests.length;
+  document.getElementById('s-approved').textContent=myRequests.filter(r=>r.status==='approved').length;
+  document.getElementById('s-pending').textContent=myRequests.filter(r=>!r.status||r.status==='pending').length;
+  document.getElementById('s-rejected').textContent=myRequests.filter(r=>r.status==='rejected').length;
+  document.getElementById('dash-stock').innerHTML=stock.map(s=>`
+    <div class="blood-card ${s.units<=s.minUnits?'low':'ok'}" onclick="showPage('search',null)">
+      <div class="bc-type"><span class="bg-b ${bgClass(s.bloodGroup)}">${s.bloodGroup}</span></div>
+      <div class="bc-units">${s.units}</div><div class="bc-label">units</div>
+    </div>`).join('');
+  document.getElementById('recent-reqs').innerHTML=myRequests.slice(0,4).map(r=>`
+    <div class="card" style="margin-bottom:.6rem"><div class="card-body" style="display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem">
+      <div><span class="bg-b ${bgClass(r.bloodGroup)}" style="margin-right:.5rem">${r.bloodGroup}</span><strong style="font-size:.88rem">${r.units} units</strong><div style="font-size:.74rem;color:var(--text-muted);margin-top:2px">${fmtDate(r.requestedAt)}</div></div>
+      <span class="badge ${r.status==='approved'?'b-green':r.status==='rejected'?'b-red':'b-amber'}">${r.status||'pending'}</span>
+    </div></div>`).join('')||'<p class="text-muted">No requests yet</p>';
+}
+
+function renderSearchStock(){
+  document.getElementById('search-stock').innerHTML=stock.map(s=>`
+    <div class="blood-card ${s.units<=s.minUnits?'low':'ok'}" style="cursor:pointer" onclick="quickRequest('${s.bloodGroup}')">
+      <div class="bc-type"><span class="bg-b ${bgClass(s.bloodGroup)}">${s.bloodGroup}</span></div>
+      <div class="bc-units">${s.units}</div><div class="bc-label">units available</div>
+      <div class="bc-bar"><div class="bc-fill" style="width:${Math.min((s.units/50)*100,100)}%;background:${s.units<=s.minUnits?'var(--red)':'var(--green)'}"></div></div>
+      <div class="bc-status"><span class="badge ${s.units<=s.minUnits?'b-red':'b-green'}">${s.units<=s.minUnits?'⚠ Low':'✓ Available'}</span></div>
+      <div style="font-size:.65rem;color:var(--text-muted);margin-top:4px">Click to request</div>
+    </div>`).join('');
+}
+
+window.searchBlood=(g)=>{
+  if(!g){document.getElementById('search-result').innerHTML='';return;}
+  const s=stock.find(x=>x.bloodGroup===g);
+  document.getElementById('search-result').innerHTML=s?`
+    <div class="card" style="max-width:400px;margin-bottom:1.5rem;border-left:3px solid ${s.units<=s.minUnits?'var(--red)':'var(--green)'}"><div class="card-body">
+      <div style="display:flex;align-items:center;gap:1.5rem">
+        <span class="bg-b ${bgClass(g)}" style="font-size:1.5rem;padding:.4rem .9rem">${g}</span>
+        <div><div style="font-size:2.5rem;font-weight:700;color:var(--text-primary);line-height:1">${s.units}</div><div style="font-size:.75rem;color:var(--text-muted)">units available</div><span class="badge ${s.units<=s.minUnits?'b-red':'b-green'}" style="margin-top:4px;display:inline-block">${s.units<=s.minUnits?'⚠ Low Stock':'✓ Available'}</span></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:1rem;width:100%" onclick="quickRequest('${g}')">Request ${g} Blood</button>
+    </div></div>`:
+  '<div class="card" style="max-width:400px;margin-bottom:1.5rem"><div class="card-body"><p class="text-muted">Blood group not found in stock.</p></div></div>';
+};
+
+window.quickRequest=(g)=>{document.getElementById('req-blood').value=g;showPage('request',document.querySelector('[onclick*="page-request"]'));};
+
+window.submitRequest=async()=>{
+  const blood=document.getElementById('req-blood').value,units=+document.getElementById('req-units').value||0,priority=document.getElementById('req-priority').value,patient=document.getElementById('req-patient').value,notes=document.getElementById('req-notes').value;
+  const err=document.getElementById('req-err');
+  if(!blood||!units){err.textContent='Please select blood group and units.';err.classList.add('show');setTimeout(()=>err.classList.remove('show'),4000);return;}
+  await addRequest({hospitalUid:me.uid,hospitalName:me.hospitalName||me.name,bloodGroup:blood,units,priority,patientName:patient,notes,status:'pending'});
+  const el=document.getElementById('req-ok');el.textContent='✅ Request submitted! Waiting for admin approval.';el.classList.add('show');
+  document.getElementById('req-blood').value='';document.getElementById('req-units').value='';document.getElementById('req-notes').value='';
+  myRequests=await getRequestsByHospital(me.uid);renderDashboard();renderMyRequests(myRequests);
+  setTimeout(()=>{el.classList.remove('show');showPage('myrequests',document.querySelector('[onclick*="myrequests"]'));},2000);
+};
+
+function renderMyRequests(list){
+  const tbody=document.getElementById('myreqs-tbody');
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem">No requests submitted yet</td></tr>`;return;}
+  tbody.innerHTML=list.map(r=>`<tr>
+    <td><span class="bg-b ${bgClass(r.bloodGroup)}">${r.bloodGroup}</span></td>
+    <td>${r.units} units</td>
+    <td><span class="badge ${r.priority==='urgent'?'b-red':r.priority==='high'?'b-amber':'b-blue'}">${r.priority||'normal'}</span></td>
+    <td>${r.patientName||'—'}</td>
+    <td>${fmtDate(r.requestedAt)}</td>
+    <td><span class="badge ${r.status==='approved'?'b-green':r.status==='rejected'?'b-red':'b-amber'}">${r.status||'pending'}</span></td>
+  </tr>`).join('');
+}
+window.filterMyReqs=(f,btn)=>{btn.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderMyRequests(f==='all'?myRequests:myRequests.filter(r=>(r.status||'pending')===f));};
+
+function loadProfile(){document.getElementById('p-name-d').textContent=me.hospitalName||me.name;document.getElementById('p-av').textContent=(me.hospitalName||me.name)[0].toUpperCase();document.getElementById('p-hname').value=me.hospitalName||'';document.getElementById('p-phone').value=me.phone||'';document.getElementById('p-address').value=me.address||'';document.getElementById('p-contact').value=me.contactPerson||'';}
+window.saveProfile=async()=>{
+  const data={hospitalName:document.getElementById('p-hname').value,phone:document.getElementById('p-phone').value,address:document.getElementById('p-address').value,contactPerson:document.getElementById('p-contact').value};
+  await updateUser(me.uid,data);document.getElementById('hosp-name').textContent=data.hospitalName||me.name;
+  const el=document.getElementById('p-ok');el.textContent='✅ Saved!';el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);
+};
+
+window.showPage=(id,btn)=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');const t={dashboard:'Dashboard',search:'Search Blood',request:'Request Blood',myrequests:'My Requests',profile:'Hospital Profile'};document.getElementById('page-title').textContent=t[id]||id;if(btn)btn.classList.add('active');};
+window.handleLogout=()=>{import('./auth.js').then(m=>m.logoutUser());};
+</script>
+</body>
+</html>
